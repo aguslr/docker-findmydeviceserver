@@ -1,0 +1,12 @@
+version: '2.4'
+
+services:
+  findmydeviceserver:
+    container_name: findmydeviceserver
+    build:
+      context: .
+    restart: unless-stopped
+    volumes:
+      - ./data:/data
+    ports:
+      - 1020:1020/tcp
