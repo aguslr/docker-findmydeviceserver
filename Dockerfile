@@ -43,7 +43,7 @@ COPY --from=builder /go/src/findmydeviceserver/extra /fmd/extra
 
 RUN useradd -m -u 1000 user
 RUN mkdir /fmd/objectbox \
-  && chown user:user /fmd/objectbox
+  && chown -R user:user /fmd
 USER user
 
 EXPOSE 1020/tcp
