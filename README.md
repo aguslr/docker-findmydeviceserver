@@ -17,7 +17,7 @@ To use *docker-findmydeviceserver*, follow these steps:
 
 1. Clone and start the container:
 
-       docker run -p 1020:1020 -v "${PWD}"/data:/data \
+       docker run -p 1020:1020 -v ./data:/data \
          docker.io/aguslr/findmydeviceserver:latest
 
 2. Register your device with your *FindMyDeviceServer*'s IP address on port
