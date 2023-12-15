@@ -110,7 +110,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.IMAGE_NAME }}
+            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.REPO_NAME }}
           flavor: |
             latest=false
           tags: |
