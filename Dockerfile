@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=library/debian:bullseye-slim
+ARG BASE_IMAGE=library/debian:bookworm-slim
 
 FROM docker.io/library/golang:bullseye AS builder
 
