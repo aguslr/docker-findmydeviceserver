@@ -1,6 +1,6 @@
-ARG BASE_IMAGE=library/debian:bookworm-slim
+ARG BASE_IMAGE=library/debian:stable-slim
 
-FROM docker.io/library/golang:bullseye AS builder
+FROM docker.io/library/golang:latest AS builder
 
 ARG FMDSERVER_REPO=https://gitlab.com/Nulide/findmydeviceserver
 ARG FMDSERVER_TAG=v0.4.0
