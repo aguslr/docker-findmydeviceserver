@@ -17,11 +17,11 @@ To use *docker-findmydeviceserver*, follow these steps:
 
 1. Clone and start the container:
 
-       docker run -p 1020:1020 -v ./data:/data \
+       docker run -p 8080:8080 -v ./data:/data \
          docker.io/aguslr/findmydeviceserver:latest
 
 2. Register your device with your *FindMyDeviceServer*'s IP address on port
-   `1020` using the [Android app][3].
+   `8080` using the [Android app][3].
 
 
 Build locally

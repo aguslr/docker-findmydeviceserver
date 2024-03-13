@@ -9,4 +9,4 @@ services:
     volumes:
       - ./data:/data
     ports:
-      - 1020:1020/tcp
+      - 8080:8080/tcp
