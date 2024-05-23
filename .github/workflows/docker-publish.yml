@@ -45,7 +45,7 @@ jobs:
     needs: variables
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: ${{ needs.variables.outputs.image_name }}
+      IMAGE_NAME: ${{ github.event_name != 'pull_request' && needs.variables.outputs.image_name || github.event.repository.name }}
     outputs:
       image-needs-updating: ${{ steps.check.outputs.needs-updating }}
     steps:
@@ -62,7 +62,7 @@ jobs:
     needs: [check, variables]
 
     env:
-      IMAGE_NAME: ${{ needs.variables.outputs.image_name }}
+      IMAGE_NAME: ${{ github.event_name != 'pull_request' && needs.variables.outputs.image_name || github.event.repository.name }}
 
     if: |
       github.event_name != 'schedule' ||
@@ -84,7 +84,6 @@ jobs:
           password: ${{ env.REGISTRY_PASSWORD }}
 
       - name: Extract Docker metadata
-        if: github.event_name != 'pull_request'
         id: meta
         uses: docker/metadata-action@v5
         with:
@@ -96,23 +95,18 @@ jobs:
             org.opencontainers.image.base.name=docker.io/${{ env.IMAGE_BASE }}
           tags: |
             type=sha
-            type=schedule,pattern={{date 'YYYYMMDD'}}
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=schedule,pattern={{date 'YYYYMMDD'}},enable=${{ github.event_name != 'pull_request' }}
+            type=semver,pattern={{version}},enable=${{ github.event_name != 'pull_request' }}
+            type=semver,pattern={{major}}.{{minor}},enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=latest,enable={{is_default_branch}},enable=${{ github.event_name != 'pull_request' }}
+            type=ref,event=pr,enable=${{ github.event_name == 'pull_request' }}
 
-      - name: Extract Docker PR tag
-        if: github.event_name == 'pull_request'
-        id: meta_pr
-        uses: docker/metadata-action@v5
-        with:
-          images: |
-            ${{ env.REGISTRY_URL }}/${{ env.REGISTRY_USERNAME }}/${{ env.REPO_NAME }}
-          flavor: |
-            latest=false
-          tags: |
-            type=sha
-            type=ref,event=pr
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build and push Docker image
         id: build-and-push
