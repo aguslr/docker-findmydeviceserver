@@ -7,33 +7,40 @@ ARG FMDSERVER_TAG=v0.5.0
 
 ENV GOPATH /go
 
-RUN \
-  apt-get update && \
-  env DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y npm \
-  -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
-
 WORKDIR /go/src/findmydeviceserver
-RUN \
-  wget ${FMDSERVER_REPO}/-/archive/${FMDSERVER_TAG}/findmydeviceserver-${FMDSERVER_TAG}.tar.gz -O - \
-  | tar -xzv --strip-components=1 \
-  && go mod download && go mod verify
+RUN <<-EOT bash
+	set -eu
+
+	apt-get update
+	env DEBIAN_FRONTEND=noninteractive \
+		apt-get install -y npm \
+		-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+	apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
+
+	wget ${FMDSERVER_REPO}/-/archive/${FMDSERVER_TAG}/findmydeviceserver-${FMDSERVER_TAG}.tar.gz -O - \
+		| tar -xzv --strip-components=1
+	go mod download && go mod verify
+EOT
 
 ADD https://raw.githubusercontent.com/objectbox/objectbox-go/main/install.sh objectbox-install.sh
-RUN chmod u+x objectbox-install.sh \
-  && ./objectbox-install.sh
+RUN <<-EOT bash
+	set -eu
 
-RUN go build -o /fmd cmd/fmdserver.go
+	chmod u+x objectbox-install.sh && ./objectbox-install.sh
+	go build -o /fmd cmd/fmdserver.go
+EOT
 
 FROM docker.io/${BASE_IMAGE}
 
-RUN \
-  apt-get update && \
-  env DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y ca-certificates \
-  -o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold" \
-  && apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
+RUN <<-EOT bash
+	set -eu
+
+	apt-get update
+	env DEBIAN_FRONTEND=noninteractive \
+		apt-get install -y ca-certificates \
+		-o Dpkg::Options::="--force-confdef" -o Dpkg::Options::="--force-confold"
+	apt-get clean && rm -rf /var/lib/apt/lists/* /var/lib/apt/lists/*
+EOT
 
 COPY --from=builder /fmd /fmd/server
 COPY --from=builder /usr/lib/libobjectbox.so /usr/lib/libobjectbox.so
