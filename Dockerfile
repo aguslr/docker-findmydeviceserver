@@ -8,7 +8,7 @@ ARG FMDSERVER_TAG=v0.5.0
 ENV GOPATH /go
 
 WORKDIR /go/src/findmydeviceserver
-RUN <<-EOT bash
+RUN <<-EOT sh
 	set -eu
 
 	apt-get update
@@ -23,7 +23,7 @@ RUN <<-EOT bash
 EOT
 
 ADD https://raw.githubusercontent.com/objectbox/objectbox-go/main/install.sh objectbox-install.sh
-RUN <<-EOT bash
+RUN <<-EOT sh
 	set -eu
 
 	chmod u+x objectbox-install.sh && ./objectbox-install.sh
@@ -32,7 +32,7 @@ EOT
 
 FROM docker.io/${BASE_IMAGE}
 
-RUN <<-EOT bash
+RUN <<-EOT sh
 	set -eu
 
 	apt-get update
