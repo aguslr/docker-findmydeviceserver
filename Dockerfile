@@ -53,7 +53,7 @@ RUN mkdir /fmd/objectbox \
 USER fmd-user
 
 EXPOSE 8080/tcp
-VOLUME /data
+VOLUME /fmd/objectbox
 
 HEALTHCHECK --interval=1m --timeout=3s \
   CMD timeout 2 bash -c 'cat < /dev/null > /dev/tcp/127.0.0.1/8080'
