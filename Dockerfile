@@ -3,7 +3,7 @@ ARG BASE_IMAGE=library/debian:stable-slim
 FROM docker.io/library/golang:latest AS builder
 
 ARG FMDSERVER_REPO=https://gitlab.com/Nulide/findmydeviceserver
-ARG FMDSERVER_TAG=v0.5.0
+ARG FMDSERVER_TAG=v0.7.0
 
 ENV GOPATH /go
 
