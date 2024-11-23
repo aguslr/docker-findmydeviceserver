@@ -7,6 +7,6 @@ services:
       context: .
     restart: unless-stopped
     volumes:
-      - ./data:/fmd/objectbox
+      - ./data:/fmd/db
     ports:
       - 8080:8080/tcp
